@@ -8,7 +8,6 @@ import utilities
 
 app = Flask(__name__)
 CORS(app)
-
 @app.route("/status")
 def health():
     return jsonify({
