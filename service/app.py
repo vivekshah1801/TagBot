@@ -33,6 +33,7 @@ def add_or_update():
             })
         encoding = encodings[0]
         msg = db.add_to_db(userid, serverid, encoding)
+        msg = "Success"
         reco.save_encoding(userid, serverid, encoding)
         return jsonify({
             "status" : "success",
@@ -51,6 +52,8 @@ def delete():
     userid, serverid = request.json["userid"], request.json["serverid"]
     try:
         msg = db.delete_from_db(userid,serverid)
+        msg = "success"
+        reco.delete_encoding(userid, serverid)
         return jsonify({
             "status" : "success",
             "userid" : userid,
@@ -79,13 +82,20 @@ def detect_face():
             "status" : "success",
             "userid" : userid,
             "serverid" : serverid,
-            "detected_id" : res
+            "detected_id" : res # list of userids. assured that they are from the server
         })
     except:
         return jsonify({
             "status" : "fail",
             "message" : "Error in detecting faces."
         })
+
+@app.route("/check_mapping", methods=['GET'])
+def check_mapping():
+    l = {}
+    for server in reco.mapping:
+        l[server] = list(reco.mapping[server].keys()) # list of userids in the server
+    return jsonify(l)
 
 if __name__ == "__main__":
     app.run()
