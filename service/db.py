@@ -33,5 +33,4 @@ def delete_from_db(userid, serverid):
 
 def get_userids(serverid):
     user_ref = db.collection(str(serverid)).get()
-    print(len(user_ref))
-    return 1
+    return (len(user_ref))
