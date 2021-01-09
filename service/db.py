@@ -31,8 +31,7 @@ def delete_from_db(userid, serverid):
     return "Successfully deleted the encoding"
 
 
-# def get_userids(serverid):
-#     # return the list of userids
-#     return userids
-#     # for error return []
-#     return []
+def get_userids(serverid):
+    user_ref = db.collection(str(serverid)).get()
+    print(len(user_ref))
+    return 1
