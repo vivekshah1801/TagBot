@@ -8,7 +8,6 @@ import utilities
 
 app = Flask(__name__)
 CORS(app)
-
 @app.route("/status")
 def health():
     return jsonify({
@@ -28,3 +27,6 @@ def delete():
 @app.route("/detect", methods=['POST'])
 def detect_face():
     return "detect"
+
+if __name__ == "__main__":
+    app.run()
