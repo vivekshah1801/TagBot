@@ -15,15 +15,19 @@ db = db_connection()
 def add_to_db(userid, serverid, encoding):
     user_ref = db.collection(str(serverid))
     user_ref.document(str(userid)).set({
-        "userid":userid,
-        "serverid":serverid,
+        "userid":str(userid),
+        "serverid":str(serverid),
         "encoding":json.dumps(encoding.tolist())
     })
     return "Successfully updated"
 
 
 def delete_from_db(userid, serverid):
-    db.collection(str(serverid)).delete()
+    try:
+        db.collection(str(serverid)).document(str(userid)).delete()
+        db.collection(str(serverid))
+    except Exception as e:
+        print(e)
     return "Successfully deleted the encoding"
 
 

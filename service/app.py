@@ -40,8 +40,7 @@ def add_or_update():
             "serverid" : serverid,
             "message" : msg
         })
-    except Exception as e:
-        print(e)
+    except:
         return jsonify({
             "status" : "fail",
             "message" : "Error in saving image encoding."
