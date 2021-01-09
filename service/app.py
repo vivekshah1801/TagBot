@@ -32,7 +32,7 @@ def add_or_update():
                 "message": "Zero or more than one face found in image."
             })
         encoding = encodings[0]
-        msg = db.add_to_db(userid, serverid)
+        msg = db.add_to_db(userid, serverid, encoding)
         reco.save_encoding(userid, serverid, encoding)
         return jsonify({
             "status" : "success",
@@ -40,7 +40,8 @@ def add_or_update():
             "serverid" : serverid,
             "message" : msg
         })
-    except:
+    except Exception as e:
+        print(e)
         return jsonify({
             "status" : "fail",
             "message" : "Error in saving image encoding."
@@ -86,3 +87,6 @@ def detect_face():
             "status" : "fail",
             "message" : "Error in detecting faces."
         })
+
+if __name__ == "__main__":
+    app.run()
