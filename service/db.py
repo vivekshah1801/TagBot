@@ -23,14 +23,17 @@ def add_to_db(userid, serverid, encoding):
 def delete_from_db(userid, serverid):
     try:
         db.collection(str(serverid)).document(str(userid)).delete()
-    except Exception as e:
-        print(e)
+    except:
+        pass
     return "Successfully deleted the encoding"
 
 
 def get_userids(serverid):
-    user_refs = db.collection(str(serverid)).get()
-    userid_list = []
-    for userid in user_refs:
-        userid_list.append(userid.id)
-    return userid_list
+    try:
+        user_refs = db.collection(str(serverid)).get()
+        userid_list = []
+        for userid in user_refs:
+            userid_list.append(userid.id)
+        return userid_list
+    except:
+        return []

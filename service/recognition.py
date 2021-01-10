@@ -3,10 +3,21 @@ import re
 from PIL import Image
 from io import BytesIO
 import numpy as np
+import requests
 import face_recognition
 import db
 
 mapping = {}
+
+def get_image_from_url(url, mode="RGB"):
+    try:
+        res = requests.get(url, stream=True)
+        res.raw.decode_content = True
+        img = Image.open(res.raw)
+        img = img.convert(mode)
+        return np.array(img)
+    except:
+        return None
 
 def get_image_from_b64(img_b64, mode="RGB"):
     try:

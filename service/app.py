@@ -18,8 +18,8 @@ def health():
 @app.route("/add", methods=['POST'])
 def add_or_update():
     try:
-        userid, serverid, img_b64 = request.json["userid"], request.json["serverid"], request.json["image"]
-        img = reco.get_image_from_b64(img_b64)
+        userid, serverid, img_url = request.json["userid"], request.json["serverid"], request.json["image"]
+        img = reco.get_image_from_url(img_url)
         if img is None:
             return jsonify({
                 "status" : "fail",
@@ -32,9 +32,8 @@ def add_or_update():
                 "message": "Zero or more than one face found in image."
             })
         encoding = encodings[0]
-        msg = db.add_to_db(userid, serverid, encoding)
-        msg = "Success"
         reco.save_encoding(userid, serverid, encoding)
+        msg = db.add_to_db(userid, serverid, encoding)
         return jsonify({
             "status" : "success",
             "userid" : userid,
@@ -51,9 +50,8 @@ def add_or_update():
 def delete():
     userid, serverid = request.json["userid"], request.json["serverid"]
     try:
-        msg = db.delete_from_db(userid,serverid)
-        msg = "success"
         reco.delete_encoding(userid, serverid)
+        msg = db.delete_from_db(userid,serverid)
         return jsonify({
             "status" : "success",
             "userid" : userid,
@@ -66,26 +64,26 @@ def delete():
             "message" : "Error in deletion."
         })
         
-@app.route("/get_user",methods=["POST"])
-def get_user():
+@app.route("/get_users",methods=["POST"])
+def get_users():
     serverid = request.json["serverid"]
     userid_list = db.get_userids(serverid)
-    print(userid_list)
-    if len(userid_list) != 0:
+    if len(userid_list) > 0:
         return jsonify({
-                "status" : "Success"
-            })
+            "status" : "success",
+            "user_ids" : userid_list
+        })
     else:
         return jsonify({
                 "status" : "fail",
                 "message" : "Server is not present"
-            })
+        })
 
 @app.route("/detect", methods=['POST'])
 def detect_face():
     try:
-        userid, serverid, img_b64 = request.json["userid"], request.json["serverid"], request.json["image"]
-        img = reco.get_image_from_b64(img_b64)
+        userid, serverid, img_url = request.json["userid"], request.json["serverid"], request.json["image"]
+        img = reco.get_image_from_url(img_url)
         if img is None:
             return jsonify({
                 "status" : "fail",
