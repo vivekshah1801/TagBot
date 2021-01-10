@@ -140,3 +140,8 @@ cython_debug/
 # ServiceAccount
 ServiceAccount.json
 serviceAccount.json
+
+# for BOT service
+node_modules
+.env
+.todo
