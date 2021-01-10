@@ -18,7 +18,7 @@ def health():
 @app.route("/add", methods=['POST'])
 def add_or_update():
     try:
-        userid, serverid, img_url = request.json["userid"], request.json["serverid"], request.json["image"]
+        userid, serverid, img_url = request.json["userId"], request.json["serverId"], request.json["image"]
         img = reco.get_image_from_url(img_url)
         if img is None:
             return jsonify({
@@ -46,10 +46,10 @@ def add_or_update():
             "message" : "Error in saving image encoding."
         })
 
-@app.route("/delete", methods=['DELETE'])
+@app.route("/delete", methods=['PUT','DELETE','POST'])
 def delete():
-    userid, serverid = request.json["userid"], request.json["serverid"]
     try:
+        userid, serverid = request.json["userId"], request.json["serverId"]
         reco.delete_encoding(userid, serverid)
         msg = db.delete_from_db(userid,serverid)
         return jsonify({
@@ -66,7 +66,7 @@ def delete():
         
 @app.route("/get_users",methods=["POST"])
 def get_users():
-    serverid = request.json["serverid"]
+    serverid = request.json["serverId"]
     userid_list = db.get_userids(serverid)
     if len(userid_list) > 0:
         return jsonify({
@@ -82,7 +82,7 @@ def get_users():
 @app.route("/detect", methods=['POST'])
 def detect_face():
     try:
-        userid, serverid, img_url = request.json["userid"], request.json["serverid"], request.json["image"]
+        userid, serverid, img_url = request.json["userId"], request.json["serverId"], request.json["image"]
         img = reco.get_image_from_url(img_url)
         if img is None:
             return jsonify({
@@ -103,7 +103,7 @@ def detect_face():
             "message" : "Error in detecting faces."
         })
 
-@app.route("/check_mapping", methods=['GET'])
+@app.route("/check_mapping", methods=['GET','POST'])
 def check_mapping():
     l = {}
     for server in reco.mapping:
