@@ -65,6 +65,21 @@ def delete():
             "status" : "fail",
             "message" : "Error in deletion."
         })
+        
+@app.route("/get_user",methods=["POST"])
+def get_user():
+    serverid = request.json["serverid"]
+    userid_list = db.get_userids(serverid)
+    print(userid_list)
+    if len(userid_list) != 0:
+        return jsonify({
+                "status" : "Success"
+            })
+    else:
+        return jsonify({
+                "status" : "fail",
+                "message" : "Server is not present"
+            })
 
 @app.route("/detect", methods=['POST'])
 def detect_face():
