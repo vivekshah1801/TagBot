@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="images/logo_round.png" type="image/x-icon">
+    <title>TagBot</title>
+</head>
+
+<body>
+    <section class="heroSection">
+        <!-- left -->
+        <div class="heroContent">
+            <div class="hero">
+                <img class="hero_logo" src="images/logo_round.png" alt="">
+                <div class="column">
+                    <h1 class="title">
+                        TechBot.tech
+                    </h1>
+                    <img class="bot_tag" src="images/discord_bot_tag.png" alt="">
+
+                </div>
+
+            </div>
+            <div>
+
+                <p class="description">Tags people by recognizing their faces in images sent in a Discord server.
+                </p>
+                <a target="_blank" rel="noopener noreferrer" href="https://discord.com/api/oauth2/authorize?client_id=797424288578666496&permissions=8&scope=bot" class="addBotBtn">+ Add To Your Server</a>
+            </div>
+        </div>
+        <!-- right -->
+        <div class="img_container">
+            <img class="bot_art" src="images/bot_art.jpg" alt="">
+        </div>
+    </section>
+    <section class="featuresSection">
+        <ul>
+            <li>Uses Robost Python face-recognition library</li>
+            <li>Uses Firebase's Firestore as mapping Database</li>
+            <li>Hosted on Fast and Reliable Google-Cloud Infstracture</li>
+        </ul>
+    </section>
+
+    <section class="footer">
+        <img class="face_img" src="images/face.png" alt="">
+        <div class="footer_content">
+            <h3>Inspiration</h3>
+            <p>
+                Nowadays most of the people share images of their friend in social media group.But it not tag the people present in image and group so we thought that it would be more fun if there is something which tag the people who is in images.</p>
+        </div>
+
+
+        <div class="footer_content">
+            <h3>What It Does ?</h3>
+            <p>
+                It takes user image from discord as input and trained it.And when someone share some image on discord then if user is present in image then it will tag that user.</p>
+        </div>
+        <div class="footer_content">
+            <h3> How we built it ?
+            </h3>
+            <p>
+                We have two services one bot service takes image from user and another face - recognition service detect the faces and return the userid of detected faces who is present in server.
+            </p>
+        </div>
+        <div class="footer_content">
+            <h3> Creators</h3>
+            <div class="creatorList">
+                <a target="_blank" rel="noopener noreferrer" class="creators" href="https://github.com/vishalx360">Vishal Kumar</a>
+                <a target="_blank" rel="noopener noreferrer" class="creators" href="https://github.com/vivekshah1801">Vivek Shah</a>
+                <a target="_blank" rel="noopener noreferrer" class="creators" href="https://github.com/avni0405">Avina
+                    Vekariya</a>
+
+
+            </div>
+        </div>
+        <div class="footer_content footerBtn">
+
+            <a target="_blank" rel="noopener noreferrer" href="https://discord.com/api/oauth2/authorize?client_id=797424288578666496&permissions=8&scope=bot" class="addBotBtn ">+ Add To Your Server</a>
+        </div>
+    </section>
+    <div class="footer_bar"></div>
+</body>
+
+</html>
