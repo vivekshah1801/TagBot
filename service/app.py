@@ -109,6 +109,3 @@ def check_mapping():
     for server in reco.mapping:
         l[server] = list(reco.mapping[server].keys()) # list of userids in the server
     return jsonify(l)
-
-if __name__ == "__main__":
-    app.run()
