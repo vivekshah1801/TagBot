@@ -21,15 +21,25 @@ const client = new Client({ ws: { intents } });
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const SERVICE_URL = process.env.SERVICE_URL;
 
-const WELCOME_MESSAGE = `---------- Hello World, I am TagBot ---------
+const WELCOME_MESSAGE = `
+-----------------------------
+**Hello World, I am @TagBot**
+-----------------------------
+
 I use Machine Learning to automatically tag people in their images.
+So your friends don't miss their funny photo which you sent!
 
 To get Started.
- - Send an image with only your face and tag me (@TagBot) in message-body, so that I will remember you.
- - After that, you will be tagged in all images sent with your face in it. (! 100% guaranteed)
+ - Send an image with only your face and tag me (@TagBot) in message-body, so I will remember you.
+ - After that, you will be tagged in all images sent with your face in it. 
 
 If you want to remove your data.
- - simply say "@TagBot !removeMyData"`;
+ - Simply say "@TagBot !removeMyData"
+
+If you want to check if I am up and running,
+ - Simply say "!status"
+`;
+
 
 // login
 client.login(BOT_TOKEN);
