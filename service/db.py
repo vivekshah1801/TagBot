@@ -19,14 +19,12 @@ def add_to_db(userid, serverid, encoding):
     })
     return "Successfully updated"
 
-
 def delete_from_db(userid, serverid):
     try:
         db.collection(str(serverid)).document(str(userid)).delete()
     except:
         pass
     return "Successfully deleted the encoding"
-
 
 def get_userids(serverid):
     try:

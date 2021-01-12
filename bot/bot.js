@@ -1,26 +1,10 @@
-// imports
-if (process.env.NODE_ENV !== "production") {
-	// - Checks if environment is profuction or development.
-	require("dotenv").config();
-}
 const axios = require("axios").default;
-
-// new Client instance
 const { Client, Intents } = require("discord.js");
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
+}	
 
-//CONFIG
-const intents = new Intents([
-	Intents.NON_PRIVILEGED, // include all non-privileged intents, would be better to specify which ones you actually need
-	"GUILD_MEMBERS", // lets you request guild members
-]);
-const client = new Client({ ws: { intents } });
-
-
-// ENV VARIABLES ----------------------
-// bot token from env variable
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const SERVICE_URL = process.env.SERVICE_URL;
-
+// Welcome message to show when this bot is added to a server
 const WELCOME_MESSAGE = `
 -----------------------------
 **Hello World, I am @TagBot**
@@ -40,18 +24,24 @@ If you want to check if I am up and running,
  - Simply say "!status"
 `;
 
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const SERVICE_URL = process.env.SERVICE_URL;
 
-// login
+// Creating new discord bot client
+const intents = new Intents([
+	Intents.NON_PRIVILEGED, // include all non-privileged intents, would be better to specify which ones you actually need
+	"GUILD_MEMBERS", // lets you request guild members
+]);	
+const client = new Client({ ws: { intents } });
 client.login(BOT_TOKEN);
 
-// ready event
 client.on("ready", () => {
-	console.log(`${client.user.tag} Online ...`);
+	console.log(`${client.user.tag} Online...`);
 });
 
-//BOT joined a server --event
+// BOT joined a server
 client.on("guildCreate", (guild) => {
-	console.log("Joined --- : " + guild.name + " ----");
+	console.log("Server Joined :", guild.name);
 	const channel = guild.channels.cache.find(
 		(channel) =>
 			(channel.name === "general" || channel.name === "welcome") &&
@@ -61,22 +51,18 @@ client.on("guildCreate", (guild) => {
 	channel.send(WELCOME_MESSAGE);
 });
 
-//BOT removed from a server --event
+// BOT removed from a server
 client.on("guildDelete", (guild) => {
-	console.log("Left --- : " + guild.name + " ----");
-	//remove from guildArray
+	console.log("Server Left :", guild.name);
 });
 
-//USER joined --event
+// A User joined server
 client.on("guildMemberAdd", (member) => {
-	console.log(member.id + " Joined");
+	console.log("Joined :", member.id);
 });
 
-//Delete -----------------------------------------------------
-//USER left --event
+// A User left the server
 client.on("guildMemberRemove", (member) => {
-	console.log(member.id + " Left");
-	// POST-REQUEST /delete
 	axios
 		.delete(SERVICE_URL + "/delete", {
 			userId: member.id,
@@ -88,46 +74,44 @@ client.on("guildMemberRemove", (member) => {
 		.catch(function (error) {
 			console.log(error);
 		});
+	console.log("Left :", member.id);
 });
 
-// message event
+// An incoming message in server
 client.on("message", async (messageRef) => {
-	// ignore messages sent by a bot.
+	// ignoring messages sent by a bot.
 	if (messageRef.author.bot) return;
 
-	//Status -----------------------------------------------------
+	// Status check message
 	if (messageRef.content === "!status") {
 		axios
 			.get(SERVICE_URL + "/status")
 			.then(function (response) {
-				// handle success
 				messageRef.channel.send("Bot Status: " + response.data.status);
 			})
 			.catch(function (error) {
-				// handle error
 				console.log(error);
 			});
 	}
 
-	const tagged = messageRef.mentions.users.has(client.user.id);
-
+	// Mapping Status message
 	if (messageRef.content === "!mapping") {
 		axios
-			.get(SERVICE_URL + "/check_mapping")
-			.then(function (response) {
-				// handle success
-				messageRef.channel.send("Bot mappings: \n" + JSON.stringify(response.data, null, 4));
-			})
-			.catch(function (error) {
-				// handle error
-				console.log(error);
-			});
+		.get(SERVICE_URL + "/check_mapping")
+		.then(function (response) {
+			messageRef.channel.send("Bot mappings: \n" + JSON.stringify(response.data, null, 4));
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 	}
+	
+	// boolean value to know if the bot is tagged in the message or not
+	const tagged = messageRef.mentions.users.has(client.user.id);
 
-	//ADD -----------------------------------------------------
+	// User add to the bot.
 	if (tagged && messageRef.content.split(" ").indexOf("!train") !== -1) {
 		messageRef.attachments.forEach(async (attachment) => {
-			// POST-REQUEST /add
 			axios
 				.post(SERVICE_URL + "/add", {
 					userTag: messageRef.author.tag,
@@ -143,10 +127,8 @@ client.on("message", async (messageRef) => {
 				});
 		});
 	}
-
-	//removeMyData -----------------------------------------------------
+	// User remove from the bot
 	else if (tagged && messageRef.content.split(" ").indexOf("!removeMyData") !== -1) {
-		// PUT-REQUEST /delete
 		axios
 			.put(SERVICE_URL + "/delete", {
 				userId: messageRef.author.id,
@@ -159,11 +141,10 @@ client.on("message", async (messageRef) => {
 				console.log(error);
 			});
 	}
+	// Recognition - Detect and tag faces in the incoming attachment
 	else{
-		//DETECT -----------------------------------------------------
 		messageRef.attachments.forEach(async (attachment) => {
-			// POST-REQUEST /detect
-			//- send that image to SERVICE to get discord ids to tag.
+			// Send image to reco service to get discord ids to tag.
 			axios
 				.post(SERVICE_URL + "/detect", {
 					userTag: messageRef.author.tag,

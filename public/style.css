@@ -173,7 +173,9 @@ li {
 }
 
 .footer_bar {
-    height: 5vh;
+    color:white;
+    text-align: center;
+    padding:10px;
     background: rgba(95, 216, 196, 0.287);
     width: 100%
 }
