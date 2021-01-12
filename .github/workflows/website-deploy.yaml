@@ -3,9 +3,6 @@ name: Website Deployment on surge
 on:
   push:
     branches: [ main ]
-  issues:
-    types: [ opened, edited, milestoned ]
-    branches: [ main ]
 
 jobs:
   build:
