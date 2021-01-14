@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+const axios = require("axios").default; // for reco service calls
 const { Client, Intents } = require("discord.js");
 if (process.env.NODE_ENV !== "production") {
 	require("dotenv").config();
@@ -64,7 +64,7 @@ client.on("guildMemberAdd", (member) => {
 // A User left the server
 client.on("guildMemberRemove", (member) => {
 	axios
-		.delete(SERVICE_URL + "/delete", {
+		.delete(get_reco_server_url(messageRef.guild.id) + "/delete", {
 			userId: member.id,
 			serverId: member.guild.id,
 		})
@@ -85,7 +85,7 @@ client.on("message", async (messageRef) => {
 	// Status check message
 	if (messageRef.content === "!status") {
 		axios
-			.get(SERVICE_URL + "/status")
+			.get(get_reco_server_url(messageRef.guild.id) + "/status")
 			.then(function (response) {
 				messageRef.channel.send("Bot Status: " + response.data.status);
 			})
@@ -97,7 +97,7 @@ client.on("message", async (messageRef) => {
 	// Mapping Status message
 	if (messageRef.content === "!mapping") {
 		axios
-		.get(SERVICE_URL + "/check_mapping")
+		.get(get_reco_server_url(messageRef.guild.id) + "/check_mapping") //returns mapping servers present only on that reco_server.
 		.then(function (response) {
 			messageRef.channel.send("Bot mappings: \n" + JSON.stringify(response.data, null, 4));
 		})
@@ -113,7 +113,7 @@ client.on("message", async (messageRef) => {
 	if (tagged && messageRef.content.split(" ").indexOf("!train") !== -1) {
 		messageRef.attachments.forEach(async (attachment) => {
 			axios
-				.post(SERVICE_URL + "/add", {
+				.post(get_reco_server_url(messageRef.guild.id) + "/add", {
 					userTag: messageRef.author.tag,
 					userId: messageRef.author.id,
 					serverId: messageRef.guild.id,
@@ -130,7 +130,7 @@ client.on("message", async (messageRef) => {
 	// User remove from the bot
 	else if (tagged && messageRef.content.split(" ").indexOf("!removeMyData") !== -1) {
 		axios
-			.put(SERVICE_URL + "/delete", {
+			.put(get_reco_server_url(messageRef.guild.id) + "/delete", {
 				userId: messageRef.author.id,
 				serverId: messageRef.guild.id,
 			})
@@ -146,7 +146,7 @@ client.on("message", async (messageRef) => {
 		messageRef.attachments.forEach(async (attachment) => {
 			// Send image to reco service to get discord ids to tag.
 			axios
-				.post(SERVICE_URL + "/detect", {
+				.post(get_reco_server_url(messageRef.guild.id) + "/detect", {
 					userTag: messageRef.author.tag,
 					userId: messageRef.author.id,
 					serverId: messageRef.guild.id,
@@ -167,3 +167,14 @@ client.on("message", async (messageRef) => {
 		});
 	}
 });
+
+function get_reco_server_url(serverId){
+	// hash the serverId to get a uniform distribution across reco_servers
+	// const hash = get_hash(serverId)
+	
+	// redis lookup
+	// redis has mapping of {hash:bot_server_url}
+	// const server_url = redis_lookup(hash)
+	const server_url = SERVICE_URL
+	return server_url
+}
